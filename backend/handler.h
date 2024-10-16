@@ -6,8 +6,8 @@
 
 #include "oatpp/core/Types.hpp"
 #include "oatpp/core/macro/codegen.hpp"
+#include "machine/machine.hpp"
 #include <stdio.h>
-
 
 #define O_UNUSED(x) (void)x;
 
@@ -16,8 +16,8 @@ class UserDto : public oatpp::DTO {
 
   DTO_INIT(UserDto, DTO)
 
-  DTO_FIELD(String, name,"user_name");
-  DTO_FIELD(UInt32, id, "id");
+  DTO_FIELD(UInt32, time, "time");
+  DTO_FIELD(Float32, cpu, "cpu");
 
 };
 #include OATPP_CODEGEN_END(DTO) ///< END DTO codegen section
@@ -31,8 +31,9 @@ public:
     {
         O_UNUSED(request);
         auto user = UserDto::createShared();
-        user->name = "Ivan";
-        user->id = 1;
+        Machine mach = Machine();
+        user->time = mach.get_local_time();
+        user->cpu = 2;
         auto jsonObjectMapper = oatpp::parser::json::mapping::ObjectMapper::createShared();
         oatpp::String json = jsonObjectMapper->writeToString(user); 
         printf("%s\n", json->c_str()); ///< print json
