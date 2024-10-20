@@ -1,17 +1,18 @@
 <script setup>
 import HelloWorld from './components/HelloWorld.vue'
 import TheWelcome from './components/TheWelcome.vue'
+import axios from '@/js/axios.js'
+import formatTimestamp from '@/js/utils.js'
 </script>
 
 <template>
   <header>
     <img alt="Vue logo" class="logo" src="./assets/logo.svg" width="125" height="125" />
     <div class="wrapper">
-      <button @click="sayHello">gettime</button>
-    </div>
-    
-    <div class="wrapper">
-      <h2>获取设备时间：{{message}}</h2>
+      <h1>{{ message }}</h1> 
+      <h2>cpu usage: {{ cpu }}"\n"</h2>
+
+      <h2>memory usage: {{ cpu }}</h2>
     </div>
   </header>
   <!-- <main>
@@ -50,21 +51,33 @@ header {
 
 <script>
 export default {
+  mounted() {
+    this.gettime();
+    this.timer = setInterval(() => {
+      setTimeout(() => {
+        this.gettime() //调用接口的方法
+      }, 0)
+    }, 2000)
+  },
   data() {
     return {
-      message: 'Hello World!'
+      message: 'Hello World!',
+      cpu: '0%'
     }
-  }
+  },
   methods: {
     gettime() {
       axios.get('/api/info')
         .then(response => {
-          this.data = response.data;
+          console.log(response.time)
+          this.message = formatTimestamp(response.time);
+          console.log(this.message)
         })
         .catch(error => {
           console.error('There was an error!', error);
         });
     }
-  }
+  },
+
 }
 </script>

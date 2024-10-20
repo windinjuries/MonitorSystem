@@ -1,10 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <iostream>   
 #include <unistd.h>
 #include <time.h>
 
+#include <iostream>
 using namespace std;
 
 typedef struct _CPU_PACKED {
@@ -56,6 +56,6 @@ double Machine::get_cpu_info()
     fgets(buff, sizeof(buff), fd);
 
     sscanf(buff, "%s %u %u %u %u", 
-    cpu->name, &cpu->user, &cpu->nice, &cpu->system, &cpu->idle);
+    cpu.name, &cpu.user, &cpu.nice, &cpu.system, &cpu.idle);
     fclose(fd);
 }
