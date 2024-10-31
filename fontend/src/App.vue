@@ -10,7 +10,7 @@ import formatTimestamp from '@/js/utils.js'
     <img alt="Vue logo" class="logo" src="./assets/logo.svg" width="125" height="125" />
     <div class="wrapper">
       <h1>{{ message }}</h1> 
-      <h2>cpu usage: {{ cpu }}"\n"</h2>
+      <h2>cpu usage: {{ cpu }} </h2>
 
       <h2>memory usage: {{ cpu }}</h2>
     </div>
@@ -71,6 +71,7 @@ export default {
         .then(response => {
           console.log(response.time)
           this.message = formatTimestamp(response.time);
+          this.cpu = response.cpu;
           console.log(this.message)
         })
         .catch(error => {

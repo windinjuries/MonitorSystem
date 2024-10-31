@@ -9,8 +9,9 @@ void run()
     // 为 HTTP 请求创建路由器
     auto router = oatpp::web::server::HttpRouter::createShared();
 
-    // 路由 GET - "/hello" 请求到处理程序
-    router->route("GET", "/info", std::make_shared<Handler>());
+    router->route("GET", "/info", std::make_shared<InfoHandler>());
+
+    router->route("GET", "/bash", std::make_shared<BashHandler>());
 
     // 创建 HTTP 连接处理程序
     auto connectionHandler = oatpp::web::server::HttpConnectionHandler::createShared(router);

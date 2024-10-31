@@ -1,9 +1,13 @@
-#ifdef __CPU_H__
+#ifndef __CPU_H__
+#define __CPU_H__
 #include "cpu.h"
 
 #ifdef __cplusplus
-extern "C"{
-    void getOsInfo(); 
+extern "C"
+{
+    double getCpuUsingInfo();
+
+    int execute_bash(const char* cmd, char* result_);
 }
 
 #endif

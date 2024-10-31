@@ -7,13 +7,13 @@
 #include <iostream>
 using namespace std;
 
-typedef struct _CPU_PACKED {
+typedef struct _cpu_packed {
     char name[16];
     unsigned int user;   //用户模式
     unsigned int nice;   //低优先级的用户模式
     unsigned int system; //内核模式
     unsigned int idle;   //空闲处理器时间
-} CPU_OCCUPY;
+} cpu_occupy;
 
 class Machine
 {
@@ -21,9 +21,9 @@ class Machine
         double cpu_use_percent;
         double memory_use_percent;
 
-    public: uint32_t get_local_time();
-
-    public: double get_cpu_info();
+    public: 
+        uint32_t get_local_time();
+        // double get_cpu_info();
 };
     
      
@@ -34,28 +34,28 @@ uint32_t Machine::get_local_time()
 }
 
 
-double Machine::get_cpu_info()
-{
-    FILE *fd;      
-    char buff[256];
-    CPU_OCCUPY cpu;
-    fd = fopen("/proc/stat", "r");
-    if (fd != NULL)
-    {
-        fgets(buff, sizeof(buff), fd);
-        if (strstr(buff, "cpu") != NULL) 
-        {
-            return -1;
-        }
-    }
-    fd = fopen("/proc/stat", "r");
-    if (fd == NULL) {
-        perror("open /proc/stat failed\n");
-        exit(0);
-    }
-    fgets(buff, sizeof(buff), fd);
+// double Machine::get_cpu_info()
+// {
+//     FILE *fd;      
+//     char buff[256];
+//     CPU_OCCUPY cpu;
+//     fd = fopen("/proc/stat", "r");
+//     if (fd != NULL)
+//     {
+//         fgets(buff, sizeof(buff), fd);
+//         if (strstr(buff, "cpu") != NULL) 
+//         {
+//             return -1;
+//         }
+//     }
+//     fd = fopen("/proc/stat", "r");
+//     if (fd == NULL) {
+//         perror("open /proc/stat failed\n");
+//         exit(0);
+//     }
+//     fgets(buff, sizeof(buff), fd);
 
-    sscanf(buff, "%s %u %u %u %u", 
-    cpu.name, &cpu.user, &cpu.nice, &cpu.system, &cpu.idle);
-    fclose(fd);
-}
+//     sscanf(buff, "%s %u %u %u %u", 
+//     cpu.name, &cpu.user, &cpu.nice, &cpu.system, &cpu.idle);
+//     fclose(fd);
+// }

@@ -1,40 +1,42 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
  
-// mostly need to read the linux config files to get system info
- 
-// ---- get os info ---- //
-void getOsInfo()
+
+#define CMD_RESULT_BUF_SIZE 4096
+typedef struct {
+    char name[16];
+    long double user;   //用户模式
+    long double nice;   //低优先级的用户模式
+    long double system; //内核模式
+    long double idle;   //空闲处理器时间
+} cpu_occupy;
+
+double getCpuUsingInfo()
 {
-    FILE *fp = fopen("/proc/version", "r");
-    if(NULL == fp)
-        printf("failed to open version\n");
-    char szTest[1000] = {0};
-    while(!feof(fp))
-    {
-        memset(szTest, 0, sizeof(szTest));
-        fgets(szTest, sizeof(szTest) - 1, fp); // leave out \n
-        printf("%s", szTest);
-    }
+    long double loadavg;
+    cpu_occupy cpu1, cpu2;
+    FILE *fp;
+
+    // 读取第一次CPU信息
+    fp = fopen("/proc/stat", "r");
+    fscanf(fp, "%s %Lf %Lf %Lf %Lf", cpu1.name, &cpu1.user, &cpu1.nice, &cpu1.system, &cpu1.idle);
     fclose(fp);
-}
- 
-// ---- get cpu info ---- //
-void getCpuInfo()
-{
-    FILE *fp = fopen("/proc/cpuinfo", "r");
-    if(NULL == fp)
-        printf("failed to open cpuinfo\n");
-    char szTest[1000] = {0};
-    // read file line by line
-    while(!feof(fp))
-    {
-        memset(szTest, 0, sizeof(szTest));
-        fgets(szTest, sizeof(szTest) - 1, fp); // leave out \n
-        printf("%s", szTest);
-    }
+    sleep(1); 
+
+    // 读取第二次CPU信息
+    fp = fopen("/proc/stat", "r");
+    fscanf(fp, "%s %Lf %Lf %Lf %Lf", cpu2.name, &cpu2.user, &cpu2.nice, &cpu2.system, &cpu2.idle);
     fclose(fp);
+
+    // 计算CPU利用率
+    long double idle_time = cpu2.idle - cpu1.idle;
+    long double total_time = (cpu2.user + cpu2.nice + cpu2.system + cpu2.idle) - (cpu1.user + cpu1.nice + cpu1.system + cpu1.idle);
+    loadavg = (total_time - idle_time) / total_time * 100;
+
+    printf("CPU Utilization: %.2Lf%%\n", loadavg);
+    return loadavg;
 }
  
  
@@ -54,106 +56,33 @@ void getMemoryInfo()
     fclose(fp);
 }
  
-// ---- get harddisk info ---- //
-#include <fcntl.h>
-#include <sys/ioctl.h>
-#include <linux/hdreg.h>
- 
-void getHardDiskInfo()
+
+int execute_bash(const char* cmd, char* result_)
 {
-    // use cmd, this is the only way
-    static struct hd_driveid hd;
-    int fd;
- 
-    if ((fd = open("/dev/sda", O_RDONLY | O_NONBLOCK)) < 0)
+    char result[CMD_RESULT_BUF_SIZE] = {0};
+    char buf_temp[CMD_RESULT_BUF_SIZE] = {0};
+    FILE *ptr = NULL;
+    int ret = -1;
+
+    if((ptr = popen(cmd, "r")) != NULL)
     {
-        printf("ERROR opening /dev/sda\n");
-        return;
-    }
- 
-    if (!ioctl(fd, HDIO_GET_IDENTITY, &hd))
-    {
-        printf("model ", hd.model);
-        printf("HardDisk Serial Number: %.20s\n", hd.serial_no);
+        while(fgets(buf_temp, sizeof(buf_temp), ptr) != NULL)
+        {
+            if(strlen(result) + strlen(buf_temp) > CMD_RESULT_BUF_SIZE)
+            {
+                break;
+            }
+            strcat(result, buf_temp); 
+        }
+        strcpy(result_, result);
+        pclose(ptr);
+        ptr = NULL;
+        ret = 0; 
     }
     else
-        printf("no available harddisk info");
-}
- 
-// ---- get network info ---- //
-#include <unistd.h>
-#include <netdb.h>
-#include <arpa/inet.h>
-#include <ifaddrs.h>
-#include <sys/socket.h>
-#include <arpa/inet.h>
-#include <sys/ioctl.h>
-#include <linux/if.h>
-void getNetworkInfo()
-{
-    // get hostname and external ip, simple and best way
-    char host_name[256] = {0};
-    gethostname(host_name, sizeof(host_name));
- 
-    struct hostent* host = gethostbyname(host_name);
-    char ip_str[32] = {0};
-    const char* ret = inet_ntop(host->h_addrtype, host->h_addr_list[0], ip_str, sizeof(ip_str));
-    if (ret != NULL)
     {
-        printf("Current HostName: %s\n", host_name);
-        printf("Current external IP: %s\n", ip_str);
+        printf("popen %s error\n", cmd);
+        ret = -1; // 处理失败
     }
- 
-    // get multiple ip, works for linux
-    struct ifaddrs *ifAddrStruct = NULL;
-    struct ifaddrs *ifa = NULL;
- 
-    getifaddrs(&ifAddrStruct);
- 
-    for (ifa = ifAddrStruct; ifa != NULL; ifa = ifa->ifa_next)
-    {
-        if (!ifa->ifa_addr)
-            continue;
- 
-        // check if IP4
-        if (ifa->ifa_addr->sa_family == AF_INET)
-        {
-            void *tmpAddrPtr = &((struct sockaddr_in *)ifa->ifa_addr)->sin_addr;
-            char local_ip[INET_ADDRSTRLEN];
-            inet_ntop(AF_INET, tmpAddrPtr, local_ip, INET_ADDRSTRLEN);
- 
-            // actually only need external ip
-            printf("%s IP: %s\n", ifa->ifa_name, local_ip);
-        }
-    }
- 
-    if (ifAddrStruct)
-        freeifaddrs(ifAddrStruct);
- 
- 
-    // get mac, need to create socket first, may not work for mac os
-    struct ifreq ifr;
-    int fd = socket(AF_INET, SOCK_DGRAM, 0);
- 
-    char local_mac[128] = { 0 };
- 
-    strcpy(ifr.ifr_name, "eth0"); // only need ethernet card
-    if (0 == ioctl(fd, SIOCGIFHWADDR, &ifr))
-    {
-        char temp_str[10] = { 0 };
-        memcpy(temp_str, ifr.ifr_hwaddr.sa_data, 6);
-        sprintf(local_mac, "%02x-%02x-%02x-%02x-%02x-%02x", temp_str[0]&0xff, temp_str[1]&0xff, temp_str[2]&0xff, temp_str[3]&0xff, temp_str[4]&0xff, temp_str[5]&0xff);
-    }
- 
-    printf("Local Mac: %s\n", local_mac);
- 
+    return ret;
 }
- 
-// ---- get process info ---- //
-void getProcessInfo()
-{
-    int pid = getpid();
-    // TODO: cpu and mem usage
-    printf("Current Pid: %d\n", pid);
-}
- 
