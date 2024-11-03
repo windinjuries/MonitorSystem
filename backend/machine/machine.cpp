@@ -36,6 +36,7 @@ int machine::get_cpu_using()
                                  (cpu[0].user + cpu[0].nice + cpu[0].system + cpu[0].idle);
         this->cpu_usage = (total_time - idle_time) / total_time * 100;
     }
+    LOGD("cpu: %f", this->cpu_usage);
     if(index > 1)
     {
         index = 0;
@@ -123,4 +124,13 @@ double machine::get_cpu_usage()
 double machine::get_memory_usage()
 {
     return this->memory_usage;
+}
+
+void monitor_thread(void)
+{
+    while(1)
+    {
+        machine_info.get_cpu_using();
+        sleep(1);
+    }
 }

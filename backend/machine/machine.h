@@ -21,9 +21,9 @@ class machine
         double cpu_usage;
         double memory_usage;
     private:
-        int get_cpu_using();
         int get_memory_using();
     public:
+        int get_cpu_using();
         double get_cpu_usage();
         double get_memory_usage();
         uint32_t get_local_time();
@@ -34,6 +34,7 @@ class machine
 
 extern machine machine_info;
 
+void monitor_thread(void);
 #endif
 
 #endif //__CPU__H__

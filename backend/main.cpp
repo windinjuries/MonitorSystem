@@ -7,7 +7,7 @@ using namespace std;
 int main() 
 {
     // start monitor
-    std::thread(machine_info.monitor_thread);
+    std::thread(monitor_thread);
     //start http server
     hv::HttpServer g_http_server;
     hv::HttpService g_http_service;
