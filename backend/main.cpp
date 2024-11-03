@@ -1,44 +1,18 @@
-// main.cpp
-#include "oatpp/web/server/HttpConnectionHandler.hpp"
-#include "oatpp/network/tcp/server/ConnectionProvider.hpp"
-#include "oatpp/network/Server.hpp"
-#include "handler.hpp"
-
-void run()
+#include "hv/HttpServer.h"
+#include "http/router.h"
+#include "machine.h"
+#include <iostream>
+#include <thread>
+using namespace std;
+int main() 
 {
-    // 为 HTTP 请求创建路由器
-    auto router = oatpp::web::server::HttpRouter::createShared();
-
-    router->route("GET", "/info", std::make_shared<InfoHandler>());
-
-    router->route("GET", "/bash", std::make_shared<BashHandler>());
-
-    // 创建 HTTP 连接处理程序
-    auto connectionHandler = oatpp::web::server::HttpConnectionHandler::createShared(router);
-
-    // 创建 TCP 连接提供者
-    auto connectionProvider = oatpp::network::tcp::server::ConnectionProvider::createShared({"localhost", 8000, oatpp::network::Address::IP_4});
-
-    // 创建服务器，它接受提供的 TCP 连接并将其传递给 HTTP 连接处理程序
-    oatpp::network::Server server(connectionProvider, connectionHandler);
-
-    // 打印服务器端口
-    OATPP_LOGI("MyApp", "Server running on port %s", connectionProvider->getProperty("port").getData());
-
-    // 运行服务器
-    server.run();
-}
-
-int main()
-{
-    // 初始化 oatpp 环境
-    oatpp::base::Environment::init();
-
-    // 运行应用
-    run();
-
-    // 销毁 oatpp 环境
-    oatpp::base::Environment::destroy();
-
+    // start monitor
+    std::thread(machine_info.monitor_thread);
+    //start http server
+    hv::HttpServer g_http_server;
+    hv::HttpService g_http_service;
+    Router::Register(g_http_service);
+    g_http_server.registerHttpService(&g_http_service);
+    g_http_server.run(":8000");
     return 0;
 }

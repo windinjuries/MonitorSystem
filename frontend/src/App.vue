@@ -9,11 +9,14 @@ import formatTimestamp from '@/js/utils.js'
   <header>
     <img alt="Vue logo" class="logo" src="./assets/logo.svg" width="125" height="125" />
     <div class="wrapper">
-      <h1>{{ message }}</h1> 
-      <h2>cpu usage: {{ cpu }} </h2>
-
-      <h2>memory usage: {{ cpu }}</h2>
+      <h1>time: {{ time }}</h1>
+      <h1>cpu usage: {{ cpu }}</h1>
+      <h1>memory usage: {{ memory }}</h1>
+      <textarea v-model="BashInput" placeholder="" rows="4" cols="80"></textarea>
+      <button @click="execute_bash">send</button>
+      <textarea v-model="ResultOutput" placeholder="" rows="12" cols="80"></textarea>
     </div>
+
   </header>
   <!-- <main>
     <TheWelcome />
@@ -42,9 +45,9 @@ header {
   }
 
   header .wrapper {
-    display: flex;
+    /* display: flex;
     place-items: flex-start;
-    flex-wrap: wrap;
+    flex-wrap: wrap; */
   }
 }
 </style>
@@ -52,33 +55,48 @@ header {
 <script>
 export default {
   mounted() {
-    this.gettime();
+    this.getmachineinfo();
     this.timer = setInterval(() => {
       setTimeout(() => {
-        this.gettime() //调用接口的方法
+        this.getmachineinfo() //调用接口的方法
       }, 0)
-    }, 2000)
+    }, 2000);
   },
   data() {
     return {
-      message: 'Hello World!',
-      cpu: '0%'
+      time: '1970-1-1 00:00:00',
+      cpu: '0%',
+      memory: '0%'
     }
   },
   methods: {
-    gettime() {
+    getmachineinfo() {
       axios.get('/api/info')
         .then(response => {
           console.log(response.time)
-          this.message = formatTimestamp(response.time);
+          this.time = formatTimestamp(response.time);
           this.cpu = response.cpu;
-          console.log(this.message)
+          this.memory = response.memory;
+        })
+        .catch(error => {
+          console.error('There was an error!', error);
+        });
+    },  
+    execute_bash() {
+    console.log("click")
+    let request = {"script":""};
+    let script = this.BashInput;
+    request.script = script;
+    axios.post('/api/bash', request) 
+        .then(response => {
+          console.log(response.result);
+          this.ResultOutput = response.result;
+          this.$forceUpdate();
         })
         .catch(error => {
           console.error('There was an error!', error);
         });
     }
-  },
-
+  }
 }
 </script>

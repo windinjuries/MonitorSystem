@@ -5,7 +5,8 @@
             "includePath": [
                 "${workspaceFolder}/**",
                 "/usr/include",
-                "/usr/local/include/oatpp-1.3.0/oatpp"
+                "/usr/local/include/oatpp-1.3.0/oatpp",
+                "/usr/local/include/hv"
             ],
             "defines": [],
             "compilerPath": "/usr/bin/gcc",

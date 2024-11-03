@@ -1,27 +1,30 @@
 cmake_minimum_required(VERSION 3.1)
 
-project(helloworld)
+project(MonitorSystem)
 
-# cpp 
 # set (CMAKE_C_COMPILER "/usr/local/gcc/bin/gcc")
 # set (CMAKE_CXX_COMPILER "/usr/local/gcc/bin/g++")
-set(CMAKE_CXX_STANDARD 11)
 
-# c 
+set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_C_STANDARD 99)
 
+SET(CMAKE_BUILD_TYPE "Debug")
 
-find_package(oatpp REQUIRED)
-message(${oatpp_INCLUDE_DIRS})
+SET(CMAKE_CXX_FLAGS_DEBUG "$ENV{CXXFLAGS} -O0 -Wall -g -ggdb")
 
-include_directories(${oatpp_INCLUDE_DIRS})
-add_subdirectory(info)
-include_directories(info machine handler)
+find_package(libhv REQUIRED)
 
-# add_subdirectory(handler)
 
-set(SOURCE_FILES main.cpp handler/handler.hpp)
+include_directories(machine)
+include_directories(http)
+
+
+add_subdirectory(machine)
+add_subdirectory(http)
+
+
+set(SOURCE_FILES main.cpp)
 
 add_executable(${PROJECT_NAME} ${SOURCE_FILES})
 
-target_link_libraries(${PROJECT_NAME} libcpu oatpp::oatpp)
+target_link_libraries(${PROJECT_NAME} machine http libhv.so)

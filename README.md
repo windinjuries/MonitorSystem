@@ -5,5 +5,4 @@
 
 ### backend
 - c++ > v11
-- otapp v1.3.0
-- nlohmann/json v3.11.3
+- libhv v1.3.3

@@ -34,7 +34,6 @@ axios.interceptors.response.use(
 export default {
     post(url, data) {
         return new Promise((resolve, reject) => {
- 
             axios({
                 method: 'post',
                 url,
