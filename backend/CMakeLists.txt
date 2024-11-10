@@ -12,13 +12,12 @@ SET(CMAKE_BUILD_TYPE "Debug")
 
 SET(CMAKE_CXX_FLAGS_DEBUG "$ENV{CXXFLAGS} -O0 -Wall -g -ggdb")
 
-find_package(libhv REQUIRED)
-
-
+include_directories(easyloggingpp)
 include_directories(machine)
 include_directories(http)
 
 
+add_subdirectory(easyloggingpp)
 add_subdirectory(machine)
 add_subdirectory(http)
 
@@ -27,4 +26,4 @@ set(SOURCE_FILES main.cpp)
 
 add_executable(${PROJECT_NAME} ${SOURCE_FILES})
 
-target_link_libraries(${PROJECT_NAME} machine http libhv.so)
+target_link_libraries(${PROJECT_NAME} easyloggingpp machine http libhv.so)

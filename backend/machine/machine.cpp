@@ -5,6 +5,7 @@
 #include <stdint.h>
 #include <time.h>
 #include "hv/hlog.h"
+#include "easylogginghelper.h"
 
 #include "machine.h"
 
@@ -36,7 +37,7 @@ int machine::get_cpu_using()
                                  (cpu[0].user + cpu[0].nice + cpu[0].system + cpu[0].idle);
         this->cpu_usage = (total_time - idle_time) / total_time * 100;
     }
-    LOGD("cpu: %f", this->cpu_usage);
+    LOG(DEBUG)  << "cpu usage average: " << this->cpu_usage;
     if(index > 1)
     {
         index = 0;
@@ -55,7 +56,8 @@ int machine::get_memory_using()
     int totalmem = 0;
 
     fd = fopen("/proc/meminfo", "r");
-    if (fd == NULL) {
+    if (fd == NULL) 
+    {
         LOGE("open /proc/meminfo failed\n");
     }
 
@@ -108,14 +110,6 @@ int machine::execute_bash(const char* cmd, char* result_)
     return ret;
 }
 
-
-void machine::monitor_thread(void)
-{
-    this->get_cpu_using();
-    this->get_memory_using();
-    sleep(1);
-}
-
 double machine::get_cpu_usage()
 {
     return this->cpu_usage;
@@ -126,10 +120,11 @@ double machine::get_memory_usage()
     return this->memory_usage;
 }
 
-void monitor_thread(void)
+void monitor_thread()
 {
     while(1)
     {
+        machine_info.get_cpu_using();
         machine_info.get_cpu_using();
         sleep(1);
     }
