@@ -2,7 +2,7 @@
 #pragma once
 #ifndef EASYLOGGINGHELPER_H
 #define EASYLOGGINGHELPER_H
-#include "easylogging++.h"
+#include "easylogging++.hpp"
 // #include <io.h>
 #include <thread>
 

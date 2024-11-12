@@ -1,8 +1,8 @@
 #ifndef __CPU_H__
 #define __CPU_H__
 
-#ifdef __cplusplus
 #include "stdint.h"
+#include "easylogginghelper.hpp"
 
 typedef struct 
 {
@@ -20,21 +20,21 @@ class machine
         uint32_t index;
         double cpu_usage;
         double memory_usage;
-    private:
-        int get_memory_using();
+
     public:
+        int get_memory_using();
         int get_cpu_using();
+
         double get_cpu_usage();
         double get_memory_usage();
         uint32_t get_local_time();
-        int execute_bash(const char* cmd, char* result_);
-        void monitor_thread();
+        int set_led_status();
+        int execute_bash(const char* cmd, char* result);
 };
 
 
 extern machine machine_info;
 
 void monitor_thread(void);
-#endif
 
 #endif //__CPU__H__

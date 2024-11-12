@@ -3,15 +3,19 @@
 #include "hv/HttpServer.h"
 #include "http/router.h"
 #include "machine/machine.h"
-#include "easyloggingpp/easylogginghelper.h"
+#include "led/led.hpp"
+#include "easyloggingpp/easylogginghelper.hpp"
 
 using namespace std;
 
 int main() 
 {
+
+    el::InitEasylogging();
+    led_object led_green("green_led");
+    led_green.set_timer_trigger(400, 100);
     // start monitor
     std::thread t1(monitor_thread);
-    el::InitEasylogging();
 
     //start http server
     hv::HttpServer g_http_server;

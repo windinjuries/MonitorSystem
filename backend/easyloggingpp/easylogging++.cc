@@ -10,7 +10,7 @@
 //  https://github.com/amrayn/easyloggingpp/blob/master/LICENSE
 //
 
-#include "easylogging++.h"
+#include "easylogging++.hpp"
 
 #if defined(AUTO_INITIALIZE_EASYLOGGINGPP)
 INITIALIZE_EASYLOGGINGPP

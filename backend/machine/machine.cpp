@@ -5,7 +5,6 @@
 #include <stdint.h>
 #include <time.h>
 #include "hv/hlog.h"
-#include "easylogginghelper.h"
 
 #include "machine.h"
 
@@ -17,6 +16,11 @@ uint32_t machine::get_local_time()
 {
     unsigned int t = time(NULL);
     return t;
+}
+
+int machine::set_led_status()
+{
+
 }
 
 int machine::get_cpu_using()
@@ -80,9 +84,8 @@ int machine::get_memory_using()
 }
  
 
-int machine::execute_bash(const char* cmd, char* result_)
+int machine::execute_bash(const char* cmd, char* result)
 {
-    char result[CMD_RESULT_BUF_SIZE] = {0};
     char buf_temp[CMD_RESULT_BUF_SIZE] = {0};
     FILE *ptr = NULL;
     int ret = -1;
@@ -97,7 +100,6 @@ int machine::execute_bash(const char* cmd, char* result_)
             }
             strcat(result, buf_temp); 
         }
-        strcpy(result_, result);
         pclose(ptr);
         ptr = NULL;
         ret = 0; 
