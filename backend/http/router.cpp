@@ -3,8 +3,13 @@
 #include "hv/hthread.h"    // import hv_gettid
 #include "hv/hasync.h"     // import hv::async
 #include "hv/requests.h"   // import requests::async
+#include "hv/hlog.h"
 
 void Router::Register(hv::HttpService& router) {
+
+    hlog_disable_fsync();
+    hlog_disable();
+    hlog_destory();
     /* handler chain */
     // preprocessor -> middleware -> processor -> postprocessor
     // processor: pathHandlers -> staticHandler -> errorHandler

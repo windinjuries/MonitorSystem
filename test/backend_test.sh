@@ -1,1 +1,3 @@
-curl http://127.0.0.1:8000/info
+#!/bin/bash
+url=192.168.2.14:8000
+curl http://192.168.2.14:8000/info

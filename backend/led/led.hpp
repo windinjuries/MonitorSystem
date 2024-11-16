@@ -24,7 +24,7 @@ public:
     ~led_object();
     int set_trigger(led_trig_t trig);
     int set_timer_trigger(uint32_t on, uint32_t off);
-    // int set_transient_trigger(uint32_t during);
+    int set_transient_trigger(uint32_t duration, uint32_t state);
 };
 
 #endif // __LED_H__

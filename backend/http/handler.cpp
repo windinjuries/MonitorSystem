@@ -10,10 +10,15 @@
 #include "hv/EventLoop.h" // import setTimeout, setInterval
 #include "hv/hlog.h"
 #include "machine.h"
+#include "led.hpp"
+#include "easylogginghelper.hpp"
 
-int Handler::preprocessor(HttpRequest* req, HttpResponse* resp) {
-    LOGD("%s:%d\n", req->client_addr.ip.c_str(), req->client_addr.port);
-    LOGD("%s\n", req->Dump(true, true).c_str());
+static led_object led_red("red_led");
+int Handler::preprocessor(HttpRequest* req, HttpResponse* resp) 
+{
+    led_red.set_transient_trigger(200, 1);
+    LOG(DEBUG) << req->client_addr.ip.c_str() << req->client_addr.port;
+    LOG(DEBUG) << req->Dump(true, true).c_str();
 
 #if REDIRECT_HTTP_TO_HTTPS
     // 301
@@ -37,17 +42,20 @@ int Handler::preprocessor(HttpRequest* req, HttpResponse* resp) {
     return HTTP_STATUS_NEXT;
 }
 
-int Handler::postprocessor(HttpRequest* req, HttpResponse* resp) {
+int Handler::postprocessor(HttpRequest* req, HttpResponse* resp) 
+{
     // printf("%s\n", resp->Dump(true, true).c_str());
     return resp->status_code;
 }
 
-int Handler::errorHandler(const HttpContextPtr& ctx) {
+int Handler::errorHandler(const HttpContextPtr& ctx) 
+{
     int error_code = ctx->response->status_code;
     return response_status(ctx, error_code);
 }
 
-int Handler::Authorization(HttpRequest* req, HttpResponse* resp) {
+int Handler::Authorization(HttpRequest* req, HttpResponse* resp) 
+{
     // authentication sample code
     if (strcmp(req->path.c_str(), "/login") == 0) {
         return HTTP_STATUS_NEXT;
@@ -64,7 +72,8 @@ int Handler::Authorization(HttpRequest* req, HttpResponse* resp) {
     return HTTP_STATUS_NEXT;
 }
 
-int Handler::sleep(const HttpRequestPtr& req, const HttpResponseWriterPtr& writer) {
+int Handler::sleep(const HttpRequestPtr& req, const HttpResponseWriterPtr& writer) 
+{
     writer->WriteHeader("X-Response-tid", hv_gettid());
     unsigned long long start_ms = gettimeofday_ms();
     writer->response->Set("start_ms", start_ms);
@@ -82,7 +91,8 @@ int Handler::sleep(const HttpRequestPtr& req, const HttpResponseWriterPtr& write
     return 200;
 }
 
-int Handler::setTimeout(const HttpContextPtr& ctx) {
+int Handler::setTimeout(const HttpContextPtr& ctx) 
+{
     unsigned long long start_ms = gettimeofday_ms();
     ctx->set("start_ms", start_ms);
     std::string strTime = ctx->param("t", "1000");
@@ -100,7 +110,8 @@ int Handler::setTimeout(const HttpContextPtr& ctx) {
     return HTTP_STATUS_UNFINISHED;
 }
 
-int Handler::query(const HttpContextPtr& ctx) {
+int Handler::query(const HttpContextPtr& ctx) 
+{
     // scheme:[//[user[:password]@]host[:port]][/path][?query][#fragment]
     // ?query => HttpRequest::query_params
     for (auto& param : ctx->params()) {
@@ -110,7 +121,8 @@ int Handler::query(const HttpContextPtr& ctx) {
     return 200;
 }
 
-int Handler::kv(HttpRequest* req, HttpResponse* resp) {
+int Handler::kv(HttpRequest* req, HttpResponse* resp) 
+{
     if (req->content_type != APPLICATION_URLENCODED) {
         return response_status(resp, HTTP_STATUS_BAD_REQUEST);
     }
@@ -122,7 +134,8 @@ int Handler::kv(HttpRequest* req, HttpResponse* resp) {
     return 200;
 }
 
-int Handler::json(HttpRequest* req, HttpResponse* resp) {
+int Handler::json(HttpRequest* req, HttpResponse* resp) 
+{
     if (req->content_type != APPLICATION_JSON) {
         return response_status(resp, HTTP_STATUS_BAD_REQUEST);
     }
@@ -134,7 +147,8 @@ int Handler::json(HttpRequest* req, HttpResponse* resp) {
     return 200;
 }
 
-int Handler::form(HttpRequest* req, HttpResponse* resp) {
+int Handler::form(HttpRequest* req, HttpResponse* resp)
+ {
     if (req->content_type != MULTIPART_FORM_DATA) {
         return response_status(resp, HTTP_STATUS_BAD_REQUEST);
     }
@@ -147,7 +161,8 @@ int Handler::form(HttpRequest* req, HttpResponse* resp) {
     return 200;
 }
 
-int Handler::grpc(HttpRequest* req, HttpResponse* resp) {
+int Handler::grpc(HttpRequest* req, HttpResponse* resp) 
+{
     if (req->content_type != APPLICATION_GRPC) {
         return response_status(resp, HTTP_STATUS_BAD_REQUEST);
     }
@@ -203,7 +218,8 @@ int Handler::login(const HttpContextPtr& ctx) {
     }
 }
 
-int Handler::bash(const HttpContextPtr& ctx) {
+int Handler::bash(const HttpContextPtr& ctx)
+ {
     char result[1024] = {0};
     std::string script = ctx->get("script");
     if (script.empty()) {
@@ -222,7 +238,8 @@ int Handler::bash(const HttpContextPtr& ctx) {
     return HTTP_STATUS_OK;
 }
 
-int Handler::info(const HttpContextPtr& ctx) {
+int Handler::info(const HttpContextPtr& ctx) 
+{
     ctx->set("time", machine_info.get_local_time());
     ctx->set("cpu", machine_info.get_cpu_usage());
     ctx->set("memory", machine_info.get_memory_usage());

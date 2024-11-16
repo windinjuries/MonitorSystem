@@ -10,10 +10,11 @@ using namespace std;
 
 int main() 
 {
-
     el::InitEasylogging();
+
     led_object led_green("green_led");
-    led_green.set_timer_trigger(400, 100);
+    led_green.set_timer_trigger(1000, 1000);
+
     // start monitor
     std::thread t1(monitor_thread);
 
