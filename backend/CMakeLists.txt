@@ -1,36 +1,43 @@
-cmake_minimum_required(VERSION 3.1)
+cmake_minimum_required(VERSION 3.22)
 
-project(MonitorSystem)
+project(MonitorSystem VERSION 1.0.0)
 
 # set (CMAKE_C_COMPILER "/usr/local/gcc/bin/gcc")
 # set (CMAKE_CXX_COMPILER "/usr/local/gcc/bin/g++")
 
+set(CMAKE_VERBOSE_MAKEFILE ON)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_C_STANDARD 99)
 
-SET(CMAKE_BUILD_TYPE "Debug")
+set(CMAKE_BUILD_TYPE "Debug")
+set(CMAKE_CXX_FLAGS_DEBUG "-O0 -Wall -g -ggdb -pthread")
+message(STATUS "CXX_FLAGS: ${CMAKE_CXX_FLAGS_DEBUG}")
 
-SET(CMAKE_CXX_FLAGS_DEBUG "$ENV{CXXFLAGS} -O0 -Wall -g -ggdb -pthread")
+set(KCONFIG_DIR ${PROJECT_SOURCE_DIR}/kconfig)
+add_custom_target(GenerateConfig
+    COMMAND python3 ${KCONFIG_DIR}/kconfig.py -g -d ${KCONFIG_DIR}
+    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+    COMMENT "Generating kconfig.h"
+    DEPENDS ${KCONFIG_DIR}/kconfig
+    VERBATIM
+)
 
-include_directories(easyloggingpp)
-include_directories(machine)
-include_directories(led)
-include_directories(http)
-
+include_directories(easyloggingpp
+                    device/machine
+                    device/led
+                    http)
 
 add_subdirectory(easyloggingpp)
-add_subdirectory(machine)
-add_subdirectory(led)
+add_subdirectory(device)
 add_subdirectory(http)
+add_subdirectory(main)
+add_dependencies(${PROJECT_NAME} GenerateConfig)
 
-
-set(SOURCE_FILES main.cpp)
-
-add_executable(${PROJECT_NAME} ${SOURCE_FILES})
-
-target_link_libraries(${PROJECT_NAME} 
-                        easyloggingpp
-                        led 
-                        machine 
-                        http 
-                        libhv.so)
+# Debug info
+function(print_include_dirs)
+    get_property(INCLUDE_DIRS DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY INCLUDE_DIRECTORIES)
+    foreach(DIR ${INCLUDE_DIRS})
+        message(STATUS "include dir = ${DIR}")
+    endforeach()
+endfunction()
+print_include_dirs()

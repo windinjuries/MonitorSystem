@@ -1,10 +1,10 @@
 #include <iostream>
 #include <thread>
 #include "hv/HttpServer.h"
-#include "http/router.h"
-#include "machine/machine.h"
-#include "led/led.hpp"
-#include "easyloggingpp/easylogginghelper.hpp"
+#include "router.h"
+#include "machine.h"
+#include "led.hpp"
+#include "easylogginghelper.hpp"
 
 using namespace std;
 
