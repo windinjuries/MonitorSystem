@@ -4,7 +4,6 @@
 #include <unistd.h>
 #include <stdint.h>
 #include <time.h>
-#include "hv/hlog.h"
 
 #include "machine.h"
 

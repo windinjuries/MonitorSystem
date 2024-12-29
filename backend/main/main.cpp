@@ -1,14 +1,14 @@
+#include "easylogginghelper.hpp"
+#include "hv/HttpServer.h"
+#include "led.hpp"
+#include "machine.h"
+#include "router.h"
 #include <iostream>
 #include <thread>
-#include "hv/HttpServer.h"
-#include "router.h"
-#include "machine.h"
-#include "led.hpp"
-#include "easylogginghelper.hpp"
 
 using namespace std;
 
-int main() 
+int main()
 {
     el::InitEasylogging();
 
@@ -18,7 +18,7 @@ int main()
     // start monitor
     std::thread t1(monitor_thread);
 
-    //start http server
+    // start http server
     hv::HttpServer g_http_server;
     hv::HttpService g_http_service;
 

@@ -1,17 +1,18 @@
 cmake_minimum_required(VERSION 3.22)
 
-project(MonitorSystem VERSION 1.0.0)
 
-# set (CMAKE_C_COMPILER "/usr/local/gcc/bin/gcc")
-# set (CMAKE_CXX_COMPILER "/usr/local/gcc/bin/g++")
+message(STATUS "ARCH: $ENV{ARCH}")
+if(NOT $ENV{ARCH} EQUAL "x86_64")
+    set(CMAKE_C_COMPILER "$ENV{TOOLCHAIN_PREFIX}gcc")
+    set(CMAKE_CXX_COMPILER "$ENV{TOOLCHAIN_PREFIX}g++")
+endif()
 
 set(CMAKE_VERBOSE_MAKEFILE ON)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_C_STANDARD 99)
-
 set(CMAKE_BUILD_TYPE "Debug")
+
 set(CMAKE_CXX_FLAGS_DEBUG "-O0 -Wall -g -ggdb -pthread")
-message(STATUS "CXX_FLAGS: ${CMAKE_CXX_FLAGS_DEBUG}")
 
 set(KCONFIG_DIR ${PROJECT_SOURCE_DIR}/kconfig)
 add_custom_target(GenerateConfig
@@ -26,6 +27,9 @@ include_directories(easyloggingpp
                     device/machine
                     device/led
                     http)
+
+
+project(MonitorSystem VERSION 1.0.0)
 
 add_subdirectory(easyloggingpp)
 add_subdirectory(device)
