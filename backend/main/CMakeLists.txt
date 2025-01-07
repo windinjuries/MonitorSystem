@@ -6,5 +6,6 @@ target_link_libraries(${PROJECT_NAME}
                         easyloggingpp
                         led 
                         machine 
-                        http 
-                        libhv.so)
+                        # http 
+                        libhv
+                        )

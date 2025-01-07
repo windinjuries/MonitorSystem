@@ -40,7 +40,7 @@ int machine::get_cpu_using()
                                  (cpu[0].user + cpu[0].nice + cpu[0].system + cpu[0].idle);
         this->cpu_usage = (total_time - idle_time) / total_time * 100;
     }
-    LOG(DEBUG)  << "cpu usage average: " << this->cpu_usage;
+    // LOG(DEBUG)  << "cpu usage average: " << this->cpu_usage;
     if(index > 1)
     {
         index = 0;
@@ -61,7 +61,7 @@ int machine::get_memory_using()
     fd = fopen("/proc/meminfo", "r");
     if (fd == NULL) 
     {
-        LOGE("open /proc/meminfo failed\n");
+        // LOG(DEBUG) << "open /proc/meminfo failed";
     }
 
     while ((read = getline(&line, &bytes_read, fd)) != -1) {

@@ -1,7 +1,12 @@
 {
     "clangd.path": "clangd",
+    "clangd.fallbackFlags": [
+        "-std=c++11",
+        // "-I/usr/aarch64-linux-gnu/include",
+    ],
     "clangd.arguments": [
-        "--compile-commands-dir=./backend/build",
+        // "--W=c++11",
+        "--compile-commands-dir=/home/fengzhishang/Desktop/MonitorSystem/backend/build",
         // 在后台自动分析文件（基于complie_commands)
         "--background-index",
         // 标记compelie_commands.json文件的目录位置
@@ -20,7 +25,10 @@
         "--fallback-style=WebKit",
         "--pretty",
         "--clang-tidy",
-        "--query-driver=clang++",
+        "--query-driver=/usr/bin/aarch64-linux-gnu-g++",
+        // "--query-driver=/usr/bin/g++",
+        // "--query-driver=/usr/bin/aarch64-linux-gnu-g++",
+        // "--resource-dir=/usr/aarch64-linux-gnu",
     ],
     "cmake.sourceDirectory": "/home/book/Project/MonitorSytem/backend"
 }

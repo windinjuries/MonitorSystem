@@ -4,8 +4,8 @@
 #include <fcntl.h> 
 #include <unistd.h> 
 #include <stdio.h>
-#include "led.hpp"
-#include "easylogginghelper.hpp"
+#include "led.h"
+// #include "easylogginghelper.hpp"
 
 #define ROOT_DIR "/sys/class/leds/"
 
@@ -34,14 +34,14 @@ int led_object::set_trigger(led_trig_t trig)
     fd = open(path, O_RDWR); 
     if (fd < 0)
     {
-        LOG(WARNING) << "no led device: " << this->name; 
+        // LOG(WARNING) << "no led device: " << this->name; 
         return -1;
     } 
     int len = strlen(trigger_type[trig]);
     if (len != write(fd, trigger_type[trig], len)) 
     {
 
-        LOG(WARNING) << "led device: " << this->name << "write trigger fail"; 
+        // LOG(WARNING) << "led device: " << this->name << "write trigger fail"; 
         return -1;
     }
     return 0;
@@ -58,14 +58,16 @@ int led_object::set_timer_trigger(uint32_t on, uint32_t off)
     fd = open(path, O_RDWR); 
     if (fd < 0)
     {
-        LOG(WARNING) << "open " << path << " fail"; 
+        // LOG(WARNING) << "open " << path << " fail"; 
+        printf("open %s fail\n", path);
         return -1;
     } 
     len = strlen(trigger_type[LED_TRIG_TIMER]);
     if (len != write(fd, trigger_type[LED_TRIG_TIMER], len)) 
     {
 
-        LOG(WARNING) << "led device: " << this->name << " write trigger fail"; 
+        // LOG(WARNING) << "led device: " << this->name << " write trigger fail"; 
+        printf("led device: %s write trigger fail\n", this->name);
         return -1;
     }
     close(fd);
@@ -74,14 +76,16 @@ int led_object::set_timer_trigger(uint32_t on, uint32_t off)
     fd = open(path, O_RDWR); 
     if (fd < 0)
     {
-        LOG(WARNING) << "open " << path << "fail"; 
+        // LOG(WARNING) << "open " << path << "fail"; 
+        printf("open %s fail\n", path);
         return -1;
     } 
     sprintf(param, "%d", on);
     len = strlen(param);
     if (len != write(fd, param, len)) 
     {
-        LOG(WARNING) << "led device: " << this->name << " write delay on fail"; 
+        // LOG(WARNING) << "led device: " << this->name << " write delay on fail"; 
+        printf("led device: %s write delay on fail\n", this->name);
         return -1;
     }
     close(fd);
@@ -90,13 +94,15 @@ int led_object::set_timer_trigger(uint32_t on, uint32_t off)
     fd = open(path, O_RDWR); 
     if (fd < 0)
     {
-        LOG(WARNING) << "open " << path << "fail"; 
+        // LOG(WARNING) << "open " << path << "fail"; 
+        printf("open %s fail\n", path);
         return -1;
     } 
     len = strlen(param);
     if (len != write(fd, param, len)) 
     {
-        LOG(WARNING) << "led device: " << this->name << " write delay off fail"; 
+        // LOG(WARNING) << "led device: " << this->name << " write delay off fail"; 
+        printf("led device: %s write delay off fail\n", this->name);
         return -1;
     }
     close(fd);
@@ -114,14 +120,14 @@ int led_object::set_transient_trigger(uint32_t duration, uint32_t state)
     fd = open(path, O_RDWR); 
     if (fd < 0)
     {
-        LOG(WARNING) << "open " << path << " fail"; 
+        // LOG(WARNING) << "open " << path << " fail"; 
         return -1;
     } 
     len = strlen(trigger_type[LED_TRIG_TRANSIENT]);
     if (len != write(fd, trigger_type[LED_TRIG_TRANSIENT], len)) 
     {
 
-        LOG(WARNING) << "led device: " << this->name << " write trigger fail"; 
+        // LOG(WARNING) << "led device: " << this->name << " write trigger fail"; 
         return -1;
     }
 
@@ -130,14 +136,14 @@ int led_object::set_transient_trigger(uint32_t duration, uint32_t state)
     fd = open(path, O_RDWR); 
     if (fd < 0)
     {
-        LOG(WARNING) << "open " << path << " fail"; 
+        // LOG(WARNING) << "open " << path << " fail"; 
         return -1;
     }
     sprintf(param, "%d", state);
     len = strlen(param);
     if (len != write(fd, param, len)) 
     {
-        LOG(WARNING) << "led device: " << this->name << " write state fail"; 
+        // LOG(WARNING) << "led device: " << this->name << " write state fail"; 
         return -1;
     }
 
@@ -145,7 +151,7 @@ int led_object::set_transient_trigger(uint32_t duration, uint32_t state)
     fd = open(path, O_RDWR); 
     if (fd < 0)
     {
-        LOG(WARNING) << "open " << path << "fail"; 
+        // LOG(WARNING) << "open " << path << "fail"; 
         return -1;
     } 
 
@@ -153,7 +159,7 @@ int led_object::set_transient_trigger(uint32_t duration, uint32_t state)
     len = strlen(param);
     if (len != write(fd, param, len)) 
     {
-        LOG(WARNING) << "led device: " << this->name << " write during fail"; 
+        // LOG(WARNING) << "led device: " << this->name << " write during fail"; 
         return -1;
     }
 
@@ -161,7 +167,7 @@ int led_object::set_transient_trigger(uint32_t duration, uint32_t state)
     fd = open(path, O_RDWR); 
     if (fd < 0)
     {
-        LOG(WARNING) << "open " << path << "fail"; 
+        // LOG(WARNING) << "open " << path << "fail"; 
         return -1;
     } 
     sprintf(param, "%d", 0x01);
@@ -169,7 +175,7 @@ int led_object::set_transient_trigger(uint32_t duration, uint32_t state)
     if (len != write(fd, param, len)) 
     if (len != write(fd, param, strlen(param))) 
     {
-        LOG(WARNING) << "led device: " << this->name << " write during fail"; 
+        // LOG(WARNING) << "led device: " << this->name << " write during fail"; 
         return -1;
     }
     return 0;
