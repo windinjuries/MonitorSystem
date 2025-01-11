@@ -27,7 +27,7 @@ fi
     
 cd "${BUILD_DIR}" 
     
-cmake -DCMAKE_VERBOSE_MAKEFILE=ON .. -DCMAKE_EXPORT_COMPILE_COMMANDS=1
+cmake .. -DCMAKE_EXPORT_COMPILE_COMMANDS=1
     
 # 构建项目，显示详细的编译命令 
 cmake --build .  -v
