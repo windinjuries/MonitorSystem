@@ -3,22 +3,19 @@
 #include <thread>   // import std::thread
 #include <chrono>   // import std::chrono
 
-#include "hv/hbase.h"
-#include "hv/htime.h"
-#include "hv/hfile.h"
-#include "hv/hstring.h"
-#include "hv/EventLoop.h" // import setTimeout, setInterval
-#include "hv/hlog.h"
+#include "hbase.h"
+#include "htime.h"
+#include "hfile.h"
+#include "hstring.h"
+#include "EventLoop.h" // import setTimeout, setInterval
+#include "hlog.h"
 #include "machine.h"
-#include "led.hpp"
-#include "easylogginghelper.hpp"
+#include "led.h"
 
 static led_object led_red("red_led");
 int Handler::preprocessor(HttpRequest* req, HttpResponse* resp) 
 {
     led_red.set_transient_trigger(200, 1);
-    LOG(DEBUG) << req->client_addr.ip.c_str() << req->client_addr.port;
-    LOG(DEBUG) << req->Dump(true, true).c_str();
 
 #if REDIRECT_HTTP_TO_HTTPS
     // 301

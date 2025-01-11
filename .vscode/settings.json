@@ -6,7 +6,7 @@
     ],
     "clangd.arguments": [
         // "--W=c++11",
-        "--compile-commands-dir=/home/fengzhishang/Desktop/MonitorSystem/backend/build",
+        "--compile-commands-dir=${workspaceFolder}/backend/build",
         // 在后台自动分析文件（基于complie_commands)
         "--background-index",
         // 标记compelie_commands.json文件的目录位置

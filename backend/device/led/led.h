@@ -20,7 +20,7 @@ public:
     uint32_t fd;
     uint32_t trigger;
 public:
-    led_object(char * name);
+    led_object(const char * name);
     ~led_object();
     int set_trigger(led_trig_t trig);
     int set_timer_trigger(uint32_t on, uint32_t off);

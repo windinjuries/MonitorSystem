@@ -15,7 +15,7 @@ static char trigger_type[LED_TRIG_MAX][30] = {
     {"transient"},
 };
 
-led_object::led_object(char * name)
+led_object::led_object(const char * name)
 {
     strcpy(this->name, name);
 }
