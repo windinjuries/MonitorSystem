@@ -1,2 +1,5 @@
 add_subdirectory(machine)
 add_subdirectory(led)
+add_subdirectory(sfud)
+add_subdirectory(fal)
+add_subdirectory(flashdb)

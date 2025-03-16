@@ -5,7 +5,6 @@
 #include <unistd.h> 
 #include <stdio.h>
 #include "led.h"
-// #include "easylogginghelper.hpp"
 
 #define ROOT_DIR "/sys/class/leds/"
 

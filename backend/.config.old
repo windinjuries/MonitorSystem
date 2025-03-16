@@ -2,11 +2,11 @@
 #
 # LED STATUS
 #
-CONFIG_LED_STATUS="green:status"
+CONFIG_LED_STATUS_STRING="green:status"
 # end of LED STATUS
 
 #
 # LED NETWORK
 #
-CONFIG_LED_NETWORK="red:power"
+CONFIG_LED_NETWORK_STRING="red:power"
 # end of LED NETWORK

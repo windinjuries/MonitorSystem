@@ -7,7 +7,7 @@ if(NOT $ENV{ARCH} EQUAL "x86_64")
     set(CMAKE_CXX_COMPILER "$ENV{TOOLCHAIN_PREFIX}g++")
 endif()
 
-# set(CMAKE_VERBOSE_MAKEFILE ON
+# set(CMAKE_VERBOSE_MAKEFILE ON)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_C_STANDARD 99)
 set(CMAKE_BUILD_TYPE "Debug")
@@ -16,14 +16,6 @@ set(CMAKE_CXX_FLAGS_DEBUG "-O0 -Wall -g -ggdb -pthread")
 
 set(KCONFIG_DIR ${CMAKE_SOURCE_DIR}/kconfig)
 
-message("KCONFIG_DIR: ${KCONFIG_DIR}")
-add_custom_target(GenerateConfig
-    COMMAND python3 ${KCONFIG_DIR}/kconfig.py -g -d ${KCONFIG_DIR}
-    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
-    COMMENT "Generating kconfig.h"
-    DEPENDS ${KCONFIG_DIR}/kconfig
-    VERBATIM
-)
 
 set(PROJECT_INCLUDE_DIRS)
 
@@ -35,17 +27,32 @@ project(MonitorSystem VERSION 1.0.0)
 #                     http
 #                     ${PROJECT_INCLUDE_DIRS})
 
+
 add_subdirectory(thirdparty/libhv)
 
 include_directories(easyloggingpp
                     device/machine
                     device/led
+                    device/sfud/inc
+                    device/fal/inc
+                    device/flashdb/inc
                     http
-                    ${PROJECT_INCLUDE_DIRS})
+                    ${PROJECT_INCLUDE_DIRS}
+                    ${CMAKE_BINARY_DIR})
 add_subdirectory(device)
 add_subdirectory(http)
 add_subdirectory(main)
-add_dependencies(${PROJECT_NAME} GenerateConfig)
+
+message("KCONFIG_DIR: ${KCONFIG_DIR}  ${CMAKE_BINARY_DIR}")
+add_custom_target(generate_kconfig_h
+    COMMAND python3 ${KCONFIG_DIR}/kconfig.py -g -d ${KCONFIG_DIR}
+    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+    COMMENT "Generating kconfig.h"
+    DEPENDS ${KCONFIG_DIR}/kconfig
+    VERBATIM
+)
+
+add_dependencies(http generate_kconfig_h)
 
 # Debug info
 function(print_include_dirs)
