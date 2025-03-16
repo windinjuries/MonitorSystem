@@ -30,5 +30,5 @@
         // "--query-driver=/usr/bin/aarch64-linux-gnu-g++",
         // "--resource-dir=/usr/aarch64-linux-gnu",
     ],
-    "cmake.sourceDirectory": "/home/book/Project/MonitorSytem/backend"
+    "cmake.sourceDirectory": "/home/fengzhishang/Desktop/MonitorSystem/backend"
 }

@@ -30,7 +30,7 @@ cd "${BUILD_DIR}"
 cmake .. -DCMAKE_EXPORT_COMPILE_COMMANDS=1
     
 # 构建项目，显示详细的编译命令 
-cmake --build .  -v
+cmake --build .
 
 # 检查构建是否成功 
 if [ $? -eq 0 ]; then 
@@ -39,3 +39,5 @@ else
     echo "Build failed." 
     exit 1 
 fi 
+
+cd ..

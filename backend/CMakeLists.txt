@@ -7,7 +7,7 @@ if(NOT $ENV{ARCH} EQUAL "x86_64")
     set(CMAKE_CXX_COMPILER "$ENV{TOOLCHAIN_PREFIX}g++")
 endif()
 
-# set(CMAKE_VERBOSE_MAKEFILE ON
+# set(CMAKE_VERBOSE_MAKEFILE ON)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_C_STANDARD 99)
 set(CMAKE_BUILD_TYPE "Debug")
@@ -41,11 +41,12 @@ include_directories(easyloggingpp
                     device/machine
                     device/led
                     http
-                    ${PROJECT_INCLUDE_DIRS})
+                    ${PROJECT_INCLUDE_DIRS}
+                    ${PROJECT_BINARY_DIR})
 add_subdirectory(device)
 add_subdirectory(http)
 add_subdirectory(main)
-add_dependencies(${PROJECT_NAME} GenerateConfig)
+add_subdirectory(kconfig)
 
 # Debug info
 function(print_include_dirs)

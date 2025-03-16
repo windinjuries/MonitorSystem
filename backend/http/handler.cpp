@@ -11,8 +11,9 @@
 #include "hlog.h"
 #include "machine.h"
 #include "led.h"
+#include "kconfig.h"
 
-static led_object led_red("red_led");
+static led_object led_red(CONFIG_LED_NETWORK);
 int Handler::preprocessor(HttpRequest* req, HttpResponse* resp) 
 {
     led_red.set_transient_trigger(200, 1);
