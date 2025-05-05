@@ -11,4 +11,4 @@ target_link_libraries(${CMAKE_PROJECT_NAME}
                         fal
                         sfud
                         )
-add_dependencies(${CMAKE_PROJECT_NAME} GenerateConfig)
+# add_dependencies(${CMAKE_PROJECT_NAME} GenerateConfig)
