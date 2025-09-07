@@ -11,7 +11,7 @@ AccessModifierOffset: -4
 # AlignOperands: true
 # AlignTrailingComments: true
 # AllowAllArgumentsOnNextLine: true
-AllowAllConstructorInitializersOnNextLine: false
+# AllowAllConstructorInitializersOnNextLine: false
 # AllowAllParametersOfDeclarationOnNextLine: true
 # AllowShortBlocksOnASingleLine: Never
 AllowShortCaseLabelsOnASingleLine: true
@@ -28,7 +28,7 @@ AlwaysBreakBeforeMultilineStrings: false
 BraceWrapping:
   # AfterCaseLabel: false
   AfterClass: true
-  AfterControlStatement: Always
+  # AfterControlStatement: Always
   AfterEnum: true
   AfterFunction: true
   # AfterNamespace: false

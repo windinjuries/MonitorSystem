@@ -1,4 +1,4 @@
-set(SRCS_DIR main.cpp)
+set(SRCS_DIR main.cpp mqtt_user.c)
 
 add_executable(${CMAKE_PROJECT_NAME} ${SRCS_DIR})
 
@@ -10,5 +10,6 @@ target_link_libraries(${CMAKE_PROJECT_NAME}
                         flashdb
                         fal
                         sfud
+                        # mqtt
                         )
 # add_dependencies(${CMAKE_PROJECT_NAME} GenerateConfig)

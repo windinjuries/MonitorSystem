@@ -8,7 +8,7 @@
             "name": "gdb",  
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/backend/build/MonitorSystem",
+            "program": "${workspaceFolder}/backend/build/main/MonitorSystem",
             "args": [],
             "stopAtEntry": false,  // 这一项控制是否在入口处暂停，默认false不暂停，改为true暂停
             "cwd": "${workspaceFolder}",

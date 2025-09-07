@@ -2,5 +2,4 @@ set(DIR_SRCS handler.cpp router.cpp)
 
 add_library(http STATIC ${DIR_SRCS})
 
-target_link_libraries(http machine led)
-# add_dependencies(http GenerateConfig)
+target_link_libraries(http machine led libhv)

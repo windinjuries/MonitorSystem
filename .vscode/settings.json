@@ -30,5 +30,9 @@
         // "--query-driver=/usr/bin/aarch64-linux-gnu-g++",
         // "--resource-dir=/usr/aarch64-linux-gnu",
     ],
-    "cmake.sourceDirectory": "/home/fengzhishang/Desktop/MonitorSystem/backend"
+    "cmake.sourceDirectory": "/home/fengzhishang/Desktop/MonitorSystem/backend",
+    "files.associations": {
+        "hv.h": "c",
+        "mqtt_client.h": "c"
+    }
 }

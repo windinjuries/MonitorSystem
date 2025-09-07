@@ -113,6 +113,11 @@ set(HTTP_SRCS
     libhv/http/wsdef.c
 )
 
+set(MQTT_SRCS
+
+    libhv/mqtt/mqtt_client.c
+    libhv/mqtt/mqtt_protocol.c
+)
 set(HTTP_SERVER_SRCS
     libhv/http/server/FileCache.cpp
     libhv/http/server/HttpHandler.cpp
@@ -143,7 +148,7 @@ option(WITH_EVPP "compile evpp" ON)
 option(WITH_HTTP "compile http" ON)
 option(WITH_HTTP_SERVER "compile http/server" ON)
 option(WITH_HTTP_CLIENT "compile http/client" ON)
-option(WITH_MQTT "compile mqtt" OFF)
+option(WITH_MQTT "compile mqtt" ON)
 
 option(ENABLE_UDS "Unix Domain Socket" OFF)
 option(USE_MULTIMAP "MultiMap" OFF)
@@ -174,6 +179,21 @@ if(WITH_EVPP)
     endif()
 endif()
 
+if(WITH_MQTT)
+    set(LIBHV_HEADERS ${LIBHV_HEADERS} ${MQTT_HEADERS})
+    set(LIBHV_SRCDIRS ${LIBHV_SRCDIRS} ${MQTT_SRCS})
+endif()
+
+
+if(WITH_OPENSSL)
+    add_definitions(-DWITH_OPENSSL)
+    find_package(OpenSSL)
+    if(OpenSSL_FOUND)
+        set(LIBS ${LIBS} OpenSSL::SSL OpenSSL::Crypto)
+    else()
+        set(LIBS ${LIBS} ssl crypto)
+    endif()
+endif()
 
 set(MY_LIST_WITH_PREFIX "")
 
