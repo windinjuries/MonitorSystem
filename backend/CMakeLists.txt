@@ -12,7 +12,8 @@ set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_C_STANDARD 99)
 set(CMAKE_BUILD_TYPE "Debug")
 
-set(CMAKE_CXX_FLAGS_DEBUG "-O0 -Wall -g -ggdb -pthread")
+set(CMAKE_CXX_FLAGS_DEBUG "-O0 -Wall -g -ggdb -pthread -lrt")
+set(CMAKE_C_FLAGS_DEBUG "-O0 -Wall -g -ggdb -pthread -lrt")
 
 set(KCONFIG_DIR ${CMAKE_SOURCE_DIR}/kconfig)
 
@@ -29,6 +30,7 @@ project(MonitorSystem VERSION 1.0.0)
 
 
 add_subdirectory(thirdparty/libhv)
+add_subdirectory(thirdparty/mqtt)
 
 include_directories(easyloggingpp
                     device/machine

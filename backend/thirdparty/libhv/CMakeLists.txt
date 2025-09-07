@@ -185,4 +185,4 @@ endforeach()
 
 set(PROJECT_INCLUDE_DIRS ${MY_LIST_WITH_PREFIX} PARENT_SCOPE)
 add_library(libhv STATIC ${LIBHV_SRCDIRS})
-target_include_directories(libhv PUBLIC ${LIBHV_HEADERS})
+target_include_directories(libhv PUBLIC ${PROJECT_INCLUDE_DIRS})

@@ -1,3 +1,6 @@
 [submodule "backend/thirdparty/libhv/libhv"]
 	path = backend/thirdparty/libhv/libhv
 	url = git@github.com:ithewei/libhv.git
+[submodule "backend/thirdparty/mqtt/paho.mqtt.embedded"]
+	path = backend/thirdparty/mqtt/paho.mqtt.embedded
+	url = git@github.com:eclipse-paho/paho.mqtt.embedded-c.git
