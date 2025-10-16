@@ -10,6 +10,7 @@ target_link_libraries(${CMAKE_PROJECT_NAME}
                         flashdb
                         fal
                         sfud
+                        spi_modbus
                         # mqtt
                         )
 # add_dependencies(${CMAKE_PROJECT_NAME} GenerateConfig)

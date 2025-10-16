@@ -12,6 +12,7 @@
 #include "hlog.h"
 #include "kconfig.h"
 #include "mqtt_user.h"
+#include "spi_modbus.h"
 
 using namespace std;
 
@@ -78,9 +79,10 @@ int main()
 
     // start monitor
     std::thread thread_monitor(monitor_thread);
+    std::thread thread_modbus(spi_modbus_poll);
     // std::thread thread_flash(flashdb_thread);
-    std::thread thread_mqtt_loop(mqtt_loop_thread);
-    std::thread thread_mqtt_send(mqtt_send_thread);
+    // std::thread thread_mqtt_loop(mqtt_loop_thread);
+    // std::thread thread_mqtt_send(mqtt_send_thread);
 
     // start http server
     hv::HttpServer g_http_server;
