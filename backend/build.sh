@@ -58,8 +58,8 @@ cd .. || { echo "Failed to change directory to project root."; exit 1; }
 # 修改下面的变量以控制是否部署及部署目标
 DEPLOY=1                # 1 = deploy, 0 = skip deploy
 REMOTE_USER="root"     # 目标机器用户名
-REMOTE_HOST="192.168.2.17"  # 目标机器地址
-REMOTE_PATH="/root"    # 目标路径
+REMOTE_HOST="192.168.2.15"  # 目标机器地址
+REMOTE_PATH="/home/orangepi"    # 目标路径
 ARTIFACT_PATH="${BUILD_DIR}/main/MonitorSystem"
 
 if [ ${BUILD_OK} -eq 1 ]; then
@@ -73,7 +73,7 @@ if [ ${BUILD_OK} -eq 1 ]; then
                 exit ${SCP_EXIT_CODE}
             fi
             echo "scp succeeded; opening ssh session to ${REMOTE_USER}@${REMOTE_HOST}"
-            ssh "${REMOTE_USER}@${REMOTE_HOST}"
+            # ssh "${REMOTE_USER}@${REMOTE_HOST}"
         else
             echo "Artifact not found: ${ARTIFACT_PATH}; skipping deploy."
             exit 1

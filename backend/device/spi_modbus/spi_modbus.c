@@ -6,7 +6,9 @@
 #include <sys/ioctl.h>
 #include <linux/spi/spidev.h>
 
-#define SPI_DEVICE "/dev/spidev0.0"
+#include "hlog.h"
+
+#define SPI_DEVICE "/dev/spidev1.1"
 #define SPI_MODE 0
 #define SPI_BITS_PER_WORD 8
 #define SPI_SPEED 1000000 // 1MHz
@@ -74,6 +76,7 @@ int spi_modbus_init()
 
 int spi_modbus_xfer(int fd, char *tx_buffer, int tx_len, char *rx_buffer, int *rx_len) 
 {
+    memset(rx_buffer, 0, 128);
     struct spi_ioc_transfer tr = {
         .tx_buf = (unsigned long)tx_buffer,
         .rx_buf = (unsigned long)rx_buffer,
@@ -81,17 +84,21 @@ int spi_modbus_xfer(int fd, char *tx_buffer, int tx_len, char *rx_buffer, int *r
         .delay_usecs = 0,
         .speed_hz = SPI_SPEED,
         .bits_per_word = SPI_BITS_PER_WORD,
+        .cs_change = 1,
+        .tx_nbits = 1,
+        .rx_nbits = 1
     };
 
     // 发送请求
-    if (ioctl(fd, SPI_IOC_MESSAGE(1), &tr) < 0) 
+    int ret = ioctl(fd, SPI_IOC_MESSAGE(1), &tr);
+    printf("ret = %d\n", ret);
+    if(ret <= 0) 
     {
-        perror("SPI send failed");
+        perror("SPI send failed\n");
         return -1;
     }
+    *rx_len = ret;
 
-    // 检查响应长度
-    if (*rx_len < 4) return -1; // 最小Modbus响应长度
 
     printf("rx: ");
     for(int i = 0; i < *rx_len; i++) 
@@ -112,19 +119,23 @@ int spi_modbus_poll()
     int ret = 0;
 
     tx_data[0] = 0x01;  // slave address
-    tx_data[1] = 0x00;  // function code
-    tx_data[2] = 0x00; 
-    tx_data[3] = 0x00; 
+    tx_data[1] = 0x02;  // function code
+    tx_data[2] = 0x03; 
+    tx_data[3] = 0x04; 
+    tx_len = 128;
     fd = spi_modbus_init();
     if (fd < 0) return -1;
 
+    printf("SPI Modbus polling started\n");
     while(1)
     {
         ret = spi_modbus_xfer(fd, tx_data, tx_len, rx_data, &rx_len);
         if (ret < 0) 
         {
             printf("SPI Modbus transfer failed\n");
+            break;
         }
+        sleep(2);
     }
     close(fd);
     return 0;

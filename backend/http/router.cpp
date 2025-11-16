@@ -8,8 +8,8 @@
 void Router::Register(hv::HttpService& router) {
 
     hlog_disable_fsync();
-    hlog_disable();
-    hlog_destory();
+    // hlog_disable();
+    // hlog_destory();
     /* handler chain */
     // preprocessor -> middleware -> processor -> postprocessor
     // processor: pathHandlers -> staticHandler -> errorHandler

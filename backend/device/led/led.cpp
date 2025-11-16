@@ -133,7 +133,7 @@ int led_object::set_transient_trigger(uint32_t duration, uint32_t state)
     close(fd);
     sprintf(path, "%s%s/state", ROOT_DIR, this->name);
     fd = open(path, O_RDWR); 
-    if (fd < 0)
+    if (fd < 0) 
     {
         // LOG(WARNING) << "open " << path << " fail"; 
         return -1;

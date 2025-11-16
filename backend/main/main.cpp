@@ -70,6 +70,7 @@ int flashdb_thread()
 
 int main()
 {
+    hlog_set_handler(stdout_logger);
     LOGI("start Monitor System");
     signal(SIGINT, handler);
     signal(SIGTERM, handler);
@@ -97,7 +98,7 @@ int main()
 void handler(int sig)
 {
     LOGI("Received signal %d, cleaning up and exiting.", sig);
-    const char* led = CONFIG_LED_NETWORK;
+    const char* led = CONFIG_LED_STATUS;
     led_object led_green(led);
     led_green.set_trigger(LED_TRIG_NONE);
     exit(0);
