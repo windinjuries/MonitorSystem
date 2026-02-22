@@ -71,5 +71,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: backend-bin-aarch64
-          path: backend/build/MonitorSystem
+          path: backend/build/main/MonitorSystem
           retention-days: 7
