@@ -1,10 +1,10 @@
 
 import axios from "axios";
 import qs from "qs";
- 
-// axios.defaults.baseURL = ''  //正式
-// axios.defaults.baseURL = 'http://localhost' //测试
- 
+
+// 根据环境配置 baseURL
+axios.defaults.baseURL = import.meta.env.VITE_API_BASE_URL || '';
+
 //post请求头
 axios.defaults.headers.post["Content-Type"] ="application/x-www-form-urlencoded;charset=UTF-8";
 //设置超时

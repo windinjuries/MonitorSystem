@@ -15,7 +15,9 @@
             "environment": [],
             "externalConsole": false,  // 这一项控制是否启动外部控制台（独立的黑框）运行程序，默认false表示在集成终端中运行
             "MIMode": "gdb",
-            "miDebuggerPath": "/usr/bin/gdb",  // 调试器路径，必须与你自己的电脑相符
+            "miDebuggerPath": "/usr/bin/gdb",  // 调试器路径，必须与你自己的电脑相符/
+            // "miDebuggerPath":"/data1/peifeixiang/work/project/gdb-10.2_gdb/build/bin/aarch64-linux-gnu-gdb",
+            "miDebuggerServerAddress":"192.168.2.15:9008",
             "setupCommands": [
                 {
                     "description": "为 gdb 启用整齐打印",

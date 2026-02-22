@@ -38,6 +38,7 @@ include_directories(easyloggingpp
                     device/sfud/inc
                     device/fal/inc
                     device/flashdb/inc
+                    device/spi_modbus
                     http
                     ${PROJECT_INCLUDE_DIRS}
                     ${CMAKE_BINARY_DIR})

@@ -8,8 +8,8 @@
 void Router::Register(hv::HttpService& router) {
 
     hlog_disable_fsync();
-    hlog_disable();
-    hlog_destory();
+    // hlog_disable();
+    // hlog_destory();
     /* handler chain */
     // preprocessor -> middleware -> processor -> postprocessor
     // processor: pathHandlers -> staticHandler -> errorHandler
@@ -140,9 +140,9 @@ void Router::Register(hv::HttpService& router) {
     // curl -v http://ip:port/login -H "Content-Type:application/json" -d '{"username":"admin","password":"123456"}'
     router.POST("/login", Handler::login);
 
-    router.POST("/bash", Handler::bash);
+    router.POST("/api/bash", Handler::bash);
 
-    router.GET("/info", Handler::info);
+    router.GET("/api/info", Handler::info);
 
     // curl -v http://ip:port/upload?filename=LICENSE -d '@LICENSE'
     // curl -v http://ip:port/upload -F 'file=@LICENSE'

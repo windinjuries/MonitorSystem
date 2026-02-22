@@ -1,6 +1,8 @@
 #include <iostream>
 #include <thread>
 #include <unistd.h>
+#include <limits.h>
+#include <libgen.h>
 
 #include "HttpServer.h"
 #include "flashdb.h"
@@ -12,6 +14,7 @@
 #include "hlog.h"
 #include "kconfig.h"
 #include "mqtt_user.h"
+#include "spi_modbus.h"
 
 using namespace std;
 
@@ -69,6 +72,7 @@ int flashdb_thread()
 
 int main()
 {
+    hlog_set_handler(stdout_logger);
     LOGI("start Monitor System");
     signal(SIGINT, handler);
     signal(SIGTERM, handler);
@@ -76,15 +80,37 @@ int main()
     led_object led_green(led);
     led_green.set_timer_trigger(1000, 1000);
 
+    // get executable path to resolve frontend directory
+    char exe_path[PATH_MAX];
+    char frontend_path[PATH_MAX];
+    ssize_t len = readlink("/proc/self/exe", exe_path, sizeof(exe_path) - 1);
+    if (len != -1) {
+        exe_path[len] = '\0';
+        char* dir = dirname(exe_path);
+        snprintf(frontend_path, sizeof(frontend_path), "%s/frontend", dir);
+        LOGI("Frontend path: %s", frontend_path);
+    } else {
+        // fallback to relative path
+        strcpy(frontend_path, "./frontend");
+        LOGW("Failed to get executable path, using relative path: %s", frontend_path);
+    }
+
     // start monitor
     std::thread thread_monitor(monitor_thread);
+    std::thread thread_modbus(spi_modbus_poll);
     // std::thread thread_flash(flashdb_thread);
-    std::thread thread_mqtt_loop(mqtt_loop_thread);
-    std::thread thread_mqtt_send(mqtt_send_thread);
+    // std::thread thread_mqtt_loop(mqtt_loop_thread);
+    // std::thread thread_mqtt_send(mqtt_send_thread);
 
     // start http server
     hv::HttpServer g_http_server;
     hv::HttpService g_http_service;
+
+    // serve static files (frontend)
+    g_http_service.document_root = frontend_path;
+    g_http_service.home_page = "index.html";
+    g_http_service.index_of = "/";
+    g_http_service.Static("/", frontend_path);
 
     Router::Register(g_http_service);
     g_http_server.registerHttpService(&g_http_service);
@@ -95,7 +121,7 @@ int main()
 void handler(int sig)
 {
     LOGI("Received signal %d, cleaning up and exiting.", sig);
-    const char* led = CONFIG_LED_NETWORK;
+    const char* led = CONFIG_LED_STATUS;
     led_object led_green(led);
     led_green.set_trigger(LED_TRIG_NONE);
     exit(0);
