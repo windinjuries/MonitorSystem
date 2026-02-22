@@ -1,6 +1,8 @@
 #include <iostream>
 #include <thread>
 #include <unistd.h>
+#include <limits.h>
+#include <libgen.h>
 
 #include "HttpServer.h"
 #include "flashdb.h"
@@ -78,6 +80,21 @@ int main()
     led_object led_green(led);
     led_green.set_timer_trigger(1000, 1000);
 
+    // get executable path to resolve frontend directory
+    char exe_path[PATH_MAX];
+    char frontend_path[PATH_MAX];
+    ssize_t len = readlink("/proc/self/exe", exe_path, sizeof(exe_path) - 1);
+    if (len != -1) {
+        exe_path[len] = '\0';
+        char* dir = dirname(exe_path);
+        snprintf(frontend_path, sizeof(frontend_path), "%s/frontend", dir);
+        LOGI("Frontend path: %s", frontend_path);
+    } else {
+        // fallback to relative path
+        strcpy(frontend_path, "./frontend");
+        LOGW("Failed to get executable path, using relative path: %s", frontend_path);
+    }
+
     // start monitor
     std::thread thread_monitor(monitor_thread);
     std::thread thread_modbus(spi_modbus_poll);
@@ -88,6 +105,12 @@ int main()
     // start http server
     hv::HttpServer g_http_server;
     hv::HttpService g_http_service;
+
+    // serve static files (frontend)
+    g_http_service.document_root = frontend_path;
+    g_http_service.home_page = "index.html";
+    g_http_service.index_of = "/";
+    g_http_service.Static("/", frontend_path);
 
     Router::Register(g_http_service);
     g_http_server.registerHttpService(&g_http_service);

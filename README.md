@@ -11,3 +11,8 @@
 ### gdb 
 
 
+
+### linux 
+1. buildroot custom
+2. Orangepizero3_1.0.2_ubuntu_focal_server_linux5.4.125
+
